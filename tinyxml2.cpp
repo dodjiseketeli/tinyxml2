@@ -2281,6 +2281,12 @@ XMLError XMLDocument::SaveFile( FILE* fp, bool compact )
     return _errorID;
 }
 
+XMLError XMLDocument::Parse( const char* p)
+{
+  // We read at most 4K bytes of data to mitigate for a possible
+  // erroneous content of 'p' that wouldn't end with a \0 character.
+  return Parse( p, strnlen( p, 4 * 1024 ) );
+}
 
 XMLError XMLDocument::Parse( const char* p, size_t len )
 {
@@ -2289,9 +2295,6 @@ XMLError XMLDocument::Parse( const char* p, size_t len )
     if ( len == 0 || !p || !*p ) {
         SetError( XML_ERROR_EMPTY_DOCUMENT, 0, 0 );
         return _errorID;
-    }
-    if ( len == (size_t)(-1) ) {
-        len = strlen( p );
     }
     TIXMLASSERT( _charBuffer == 0 );
     _charBuffer = new char[ len+1 ];
@@ -2339,9 +2342,9 @@ void XMLDocument::SetError( XMLError error, int lineNum, const char* format, ...
     TIXML_SNPRINTF(buffer, BUFFER_SIZE, "Error=%s ErrorID=%d (0x%x) Line number=%d", ErrorIDToName(error), int(error), int(error), lineNum);
 
 	if (format) {
-		size_t len = strlen(buffer);
+		size_t len = strnlen(buffer, BUFFER_SIZE);
 		TIXML_SNPRINTF(buffer + len, BUFFER_SIZE - len, ": ");
-		len = strlen(buffer);
+		len = strnlen(buffer, BUFFER_SIZE);
 
 		va_list va;
 		va_start(va, format);

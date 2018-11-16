@@ -2307,7 +2307,7 @@ int main( int argc, const char ** argv )
 		static const int COUNT = 10;
 		for (int i = 0; i < COUNT; ++i) {
 			XMLDocument doc;
-			doc.Parse(mem);
+			doc.Parse(mem, size);
 			parseDreamXmlFailed = parseDreamXmlFailed || doc.Error();
 		}
 #if defined( _MSC_VER )

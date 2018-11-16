@@ -1677,12 +1677,22 @@ public:
     	Returns XML_SUCCESS (0) on success, or
     	an errorID.
 
-    	You may optionally pass in the 'nBytes', which is
-    	the number of bytes which will be parsed. If not
-    	specified, TinyXML-2 will assume 'xml' points to a
-    	null terminated string.
+    	You must pass in the 'nBytes', which is the number of bytes
+    	which will be parsed.
     */
-    XMLError Parse( const char* xml, size_t nBytes=(size_t)(-1) );
+    XMLError Parse( const char* xml, size_t nBytes);
+
+    /**
+    	Parse an XML file from a character string.
+    	Returns XML_SUCCESS (0) on success, or
+    	an errorID.
+
+	TinyXML-2 assumes 'xml' points to a null terminated string
+    	which size is at most 4K bytes.  If you want to parse a
+    	document greater than 4K size, use the overload of Parse which
+    	requires you to specify the size of 'xml'.
+    */
+    XMLError Parse( const char* xml);
 
     /**
     	Load an XML file from disk.
